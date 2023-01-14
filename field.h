@@ -1,5 +1,5 @@
-#ifndef FIELDS_H
-#define FIELDS_H
+#ifndef FIELD_H
+#define FIELD_H
 
 #include "player.h"
 

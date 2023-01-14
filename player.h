@@ -12,10 +12,6 @@ public:
         return (this->name.compare(src.name) > 0);
     }
 
-    int getMoney() const {
-        return money;
-    }
-
     void addMoney(int amount) {
         money += amount;
     }
@@ -24,17 +20,27 @@ public:
         money -= amount;
     }
 
+    int getMoney() const {
+        return money;
+    }
+
     void setWaitingTime(int waiting_time) {
         this->waiting_time = waiting_time;
     }
 
-    std::string const getName() const {
+    void decreaseWaitingTime() {
+        if (waiting_time > 0) {
+            waiting_time--;
+        }
+    }
+
+    std::string const &getName() const {
         return name;
     }
 
     // Zwraca status gracz (czy jest w grze, czy czeka, czy jest bankrutem)
     std::string const getStatus() const {
-
+        return "";
     }
 
 private:

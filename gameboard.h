@@ -1,11 +1,12 @@
 #ifndef GAMEBOARD_H
 #define GAMEBOARD_H
 
-#include "fields.h"
+#include "field.h"
 #include "player.h"
 
 #include <string>
 #include <map>
+#include <memory>
 
 class Gameboard {
 public:
@@ -15,7 +16,8 @@ public:
     }
 
     // Zwraca nazwe pola na którym znajude sie gracz
-    std::string const getPlayerPosition(Player &player) const {
+    std::string const getPlayersPosition(Player &player) const {
+        return "";
     }
 
     // Dodaje nowe pole
