@@ -21,16 +21,10 @@ public:
     ~WorldCup2022() = default;
 
     void addDie(std::shared_ptr<Die> die) override {
-        if (dice.size() + 1 > REQUIRED_DICE) {
-            throw TooManyDiceException();
-        }
         dice.addDice(die);
     }
 
     void addPlayer(std::string const &name) override {
-        if (players.size() + 1 > 11) {
-            throw TooManyPlayersException();
-        }
         Player new_player = Player(name,START_MONEY);
         players.push_back(new_player);
         board.addPlayer(new_player);
@@ -43,6 +37,12 @@ public:
     void play(unsigned int rounds) override {
         if (dice.size() < REQUIRED_DICE) {
             throw TooFewDiceException();
+        }
+        if (dice.size() > REQUIRED_DICE) {
+            throw TooManyDiceException();
+        }
+        if (players.size() > 11) {
+            throw TooManyPlayersException();
         }
         if (players.size() < 2) {
             throw TooFewPlayersException();
@@ -57,34 +57,32 @@ public:
                     continue;
                 }
 
-                if (player.isWaiting() && player.getWaitingTime() != 1) {
-                    player.decreaseWaitingTime();
-                    scoreboard->onTurn(player.getName(), player.getStatus(), board.getPlayersPosition(player), player.getMoney());
-                    continue;
-                } 
-
-                // TODO to jest trochę głupie ale jak ktoś stanie na żóltej kartce to ta runda też zalicza się do czekania
-                // bez tego ktos stoi zamiast 3 rund 4.
-                if(player.getWaitingTime() == 1) {
+                if (!player.isWaiting()) {
+                    int sum = dice.roll();
+                    board.move(player, sum);
+                }
+                scoreboard->onTurn(player.getName(), player.getStatus(), board.getPlayersPosition(player), player.getMoney());
+                if (player.isWaiting()) {
                     player.decreaseWaitingTime();
                 }
-
-                int sum = dice.roll();
-                board.move(player, sum);
-
-                scoreboard->onTurn(player.getName(), player.getStatus(), board.getPlayersPosition(player), player.getMoney());
             }
 
-            // TODO troche slaby sposob na sprawdzanie czy juz koniec gry
             int alive_num = 0;
             std::string winner;
+            int max_money = 0;
             for (auto &player : players) {
+                max_money = std::max(max_money, player.getMoney());
                 if(player.isInGame()) {
                     alive_num++;
                     winner = player.getName();
                 }
             }
-            if (alive_num == 1) {
+            if (alive_num == 1 || round_num == rounds - 1) {
+                for (auto &player : players) {
+                    if (player.isInGame() && player.getMoney() == max_money) {
+                        winner = player.getName();
+                    }
+                }
                 scoreboard->onWin(winner);
                 return;
             }

@@ -3,6 +3,7 @@
 #include <string>
 #include <cassert>
 #include "worldcup2022.h"
+#include <iostream>
 
 class ExampleDie : public Die {
 public:
@@ -34,7 +35,8 @@ public:
     }
 };
 
-int main() {
+void test(int rounds) {
+
     std::shared_ptr<Die> die1 = std::make_shared<ExampleDie>();
     std::shared_ptr<Die> die2 = std::make_shared<ExampleDie>();
     std::shared_ptr<TextScoreBoard> scoreboard = std::make_shared<TextScoreBoard>();
@@ -47,7 +49,11 @@ int main() {
     worldCup2022->addPlayer("Ronaldo");
     worldCup2022->setScoreBoard(scoreboard);
 
-    worldCup2022->play(100);
+    worldCup2022->play(rounds);
+
+    std::cout << scoreboard->str() << '\n';
+
+    if (rounds >= 6) {
     assert(scoreboard->str() ==
            "=== Runda: 0\n"
            "Lewandowski [w grze] [840] - Dzień wolny od treningu\n"
@@ -73,5 +79,31 @@ int main() {
            "Lewandowski [w grze] [315] - Początek sezonu\n"
            "Messi [*** bankrut ***] [0] - Żółta kartka\n"
            "=== Zwycięzca: Lewandowski\n");
+    } else if (rounds == 4) {
+        assert(scoreboard->str() ==
+           "=== Runda: 0\n"
+           "Lewandowski [w grze] [840] - Dzień wolny od treningu\n"
+           "Messi [w grze] [840] - Mecz z Lichtensteinem\n"
+           "Ronaldo [*** czekanie: 3 ***] [620] - Żółta kartka\n"
+           "=== Runda: 1\n"
+           "Lewandowski [*** czekanie: 3 ***] [620] - Żółta kartka\n"
+           "Messi [w grze] [540] - Mecz z Arabią Saudyjską\n"
+           "Ronaldo [*** czekanie: 2 ***] [620] - Żółta kartka\n"
+           "=== Runda: 2\n"
+           "Lewandowski [*** czekanie: 2 ***] [620] - Żółta kartka\n"
+           "Messi [w grze] [290] - Mecz z Francją\n"
+           "Ronaldo [*** czekanie: 1 ***] [620] - Żółta kartka\n"
+           "=== Runda: 3\n"
+           "Lewandowski [*** czekanie: 1 ***] [620] - Żółta kartka\n"
+           "Messi [w grze] [340] - Początek sezonu\n"
+           "Ronaldo [w grze] [140] - Bukmacher\n"
+           "=== Zwycięzca: Lewandowski\n");
+    }
+}
+
+int main() {
+    test(100);
+    // test(4);
+
     return 0;
 }
