@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include <string>
+#include <sstream>
 
 class Player {
 public:
@@ -13,11 +14,15 @@ public:
     }
 
     void addMoney(int amount) {
-        money += amount;
+        if (is_in_game) {
+            money += amount;
+        }
     }
 
     void subMoney(int amount) {
-        money -= amount;
+        if (is_in_game) {
+            money -= amount;
+        }
     }
 
     int getMoney() const {
@@ -34,13 +39,39 @@ public:
         }
     }
 
+    int getWaitingTime() {
+        return waiting_time;
+    }
+
+    bool isWaiting() {
+        return waiting_time > 0;
+    }
+
+    bool isInGame() {
+        return is_in_game;
+    }
+
+    void game_over() {
+        is_in_game = false;
+    }
+
     std::string const &getName() const {
         return name;
     }
 
     // Zwraca status gracz (czy jest w grze, czy czeka, czy jest bankrutem)
     std::string const getStatus() const {
-        return "";
+        std::stringstream status;
+        if (is_in_game && waiting_time > 0) {
+            status << "*** czekanie: " << waiting_time << " ***";
+            
+        } else if (is_in_game) {
+            status << "w grze";
+        } else {
+            status << "*** bankrut ***";
+        }
+
+        return status.str();
     }
 
 private:
