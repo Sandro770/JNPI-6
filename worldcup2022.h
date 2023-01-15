@@ -52,11 +52,11 @@ public:
 
         for (unsigned int round_num = 0; round_num < rounds; round_num++) {
             scoreboard->onRound(round_num);
+
             for (auto &player : players) {
                 if (!player.isInGame()) {
                     continue;
                 }
-
                 if (!player.isWaiting()) {
                     int sum = dice.roll();
                     board.move(player, sum);
@@ -65,28 +65,29 @@ public:
                 if (player.isWaiting()) {
                     player.decreaseWaitingTime();
                 }
-            }
 
-            int alive_num = 0;
-            std::string winner;
-            int max_money = 0;
-            for (auto &player : players) {
-                max_money = std::max(max_money, player.getMoney());
-                if(player.isInGame()) {
-                    alive_num++;
-                    winner = player.getName();
-                }
-            }
-            if (alive_num == 1 || round_num == rounds - 1) {
-                for (auto &player : players) {
-                    if (player.isInGame() && player.getMoney() == max_money) {
-                        winner = player.getName();
+                int alive_num = 0;
+                std::string winner;
+                int max_money = 0;
+                for (auto &pl : players) {
+                    max_money = std::max(max_money, pl.getMoney());
+                    if (pl.isInGame()) {
+                        alive_num++;
                     }
                 }
-                scoreboard->onWin(winner);
-                return;
+                if (alive_num == 1 || round_num == rounds - 1) {
+                    for (auto &player : players) {
+                        if (player.isInGame() && player.getMoney() == max_money) {
+                            winner = player.getName();
+                        }
+                    }
+                    scoreboard->onWin(winner);
+                    return;
+                }
             }
-        }
+
+
+        }   
     }
 
 private:
