@@ -49,10 +49,9 @@ public:
         }
 
         initBoard();
-
+        std::pair<int,std::string> money_winner;
         for (unsigned int round_num = 0; round_num < rounds; round_num++) {
             scoreboard->onRound(round_num);
-
             for (auto &player : players) {
                 if (!player.isInGame()) {
                     continue;
@@ -67,27 +66,20 @@ public:
                 }
 
                 int alive_num = 0;
-                std::string winner;
-                int max_money = 0;
+                money_winner = {0,""};
                 for (auto &pl : players) {
-                    max_money = std::max(max_money, pl.getMoney());
+                    money_winner = std::max(money_winner, {pl.getMoney(), pl.getName()});
                     if (pl.isInGame()) {
                         alive_num++;
                     }
                 }
-                if (alive_num == 1 || round_num == rounds - 1) {
-                    for (auto &player : players) {
-                        if (player.isInGame() && player.getMoney() == max_money) {
-                            winner = player.getName();
-                        }
-                    }
-                    scoreboard->onWin(winner);
+                if (alive_num == 1) {
+                    scoreboard->onWin(money_winner.second);
                     return;
                 }
             }
-
-
         }   
+        scoreboard->onWin(money_winner.second);
     }
 
 private:
