@@ -13,6 +13,16 @@
 #include <string>
 #include <vector>
 
+/** Założenia projektowe: 
+ *  -cel: łatwa rozszerzalność gry o nowe pola, graczy, kostki, itp.
+ *  -implementacja:
+ *     -worldcup2022 -> obsługuje dodawanie użytykowników, rozgrywkę oraz zapisywanie informacji o grze
+ *     -pole -> obsługuje przejście i postój gracza na nim
+ *     -plansza -> wykonuje ruch gracza i przetrzymuje informacje o ich położeniu
+ *     -kostka -> przekazuje grze informacje o wyrzuconej sumie przez gracza
+ *     -gracz -> posiada nazwę i stan zdzisławów
+*/
+
 class WorldCup2022 : public WorldCup {
 public:
   const size_t REQUIRED_DICE = 2;
