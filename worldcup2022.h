@@ -5,6 +5,7 @@
 #include "player.h"
 #include "field.h"
 #include "exceptions.h"
+#include "dice.h"
 #include "gameboard.h"
 
 #include <memory>
@@ -23,7 +24,7 @@ public:
         if (dice.size() + 1 > REQUIRED_DICE) {
             throw TooManyDiceException();
         }
-        dice.push_back(die);
+        dice.addDice(die);
     }
 
     void addPlayer(std::string const &name) override {
@@ -68,10 +69,7 @@ public:
                     player.decreaseWaitingTime();
                 }
 
-                int sum = 0;
-                for (auto &die : dice) {
-                    sum += die->roll();
-                }
+                int sum = dice.roll();
                 board.move(player, sum);
 
                 scoreboard->onTurn(player.getName(), player.getStatus(), board.getPlayersPosition(player), player.getMoney());
@@ -95,7 +93,7 @@ public:
 
 private:
     std::shared_ptr<ScoreBoard> scoreboard;
-    std::vector<std::shared_ptr<Die>> dice;
+    Dice dice;
     std::vector<Player> players;
     Gameboard board;
 
