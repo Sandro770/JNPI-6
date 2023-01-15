@@ -52,7 +52,7 @@ public:
   BookmakerField(std::string const &name, int bonus)
       : Field(name), series(0), bonus(bonus) {}
 
-  void actionOnPassing(Player &player) override {}
+  void actionOnPassing([[maybe_unused]] Player &player) override {}
 
   void actionOnStop(Player &player) override {
     if (series == 0) {
@@ -77,7 +77,7 @@ class PenaltyField : public Field {
 public:
   PenaltyField(std::string const &name, int fee) : Field(name), fee(fee) {}
 
-  void actionOnPassing(Player &player) override {}
+  void actionOnPassing([[maybe_unused]] Player &player) override {}
 
   void actionOnStop(Player &player) override {
     if (player.getMoney() < fee) {
@@ -97,7 +97,7 @@ public:
   YellowCardField(std::string const &name, int waiting_time)
       : Field(name), waiting_time(waiting_time) {}
 
-  void actionOnPassing(Player &player) override {}
+  void actionOnPassing([[maybe_unused]] Player &player) override {}
 
   void actionOnStop(Player &player) override {
     player.setWaitingTime(waiting_time);
@@ -128,7 +128,7 @@ public:
     player.addMoney(bonus); 
   }
 
-  void actionOnPassing(Player &player) override {}
+  void actionOnPassing([[maybe_unused]] Player &player) override {}
 
 private:
   int bonus;
@@ -138,9 +138,9 @@ class EmptyField : public Field {
 public:
   EmptyField(std::string const &name) : Field(name) {}
 
-  void actionOnStop(Player &player) override {}
+  void actionOnStop([[maybe_unused]] Player &player) override {}
 
-  void actionOnPassing(Player &player) override {}
+  void actionOnPassing([[maybe_unused]] Player &player) override {}
 };
 
 #endif
